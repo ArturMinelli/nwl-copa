@@ -3,12 +3,15 @@ import logoImg from '../assets/logo.svg'
 import avatars from '../assets/avatars.png'
 import checkIcon from '../assets/check-icon.svg'
 import Image from 'next/image'
+import { api } from '../lib/axios'
 
 interface HomeProps {
-  count: number;
+  poolsCount: number;
+  guessesCount: number;
+  usersCount: number;
 }
 
-export default function Home({ count }: HomeProps) {
+export default function Home({ poolsCount, guessesCount, usersCount }: HomeProps) {
   return (
     <div className='max-w-[1124px] mx-auto h-screen items-center flex gap-28'>
       <main>
@@ -20,7 +23,7 @@ export default function Home({ count }: HomeProps) {
           <Image src={avatars} alt="Avatares de pessoas que já usam a aplicação" quality={100}/>
 
           <strong className='text-gray-100 text-xl'>
-            <span className='text-ignite-500'>+12.592</span> pessoas já estão usando
+            <span className='text-ignite-500'>+{usersCount}</span> pessoas já estão usando
           </strong>
         </div>
 
@@ -47,7 +50,7 @@ export default function Home({ count }: HomeProps) {
           <div className='flex items-center gap-6'>
             <Image src={checkIcon} alt="" />
             <div className='flex flex-col gap-2'>
-              <span className='text-2xl font-bold text-gray-100'>+2.034</span>
+              <span className='text-2xl font-bold text-gray-100'>+{poolsCount}</span>
               <span className='text-gray-300'>Bolões criados</span>
             </div>
           </div>
@@ -57,7 +60,7 @@ export default function Home({ count }: HomeProps) {
           <div className='flex items-center gap-6'>
             <Image src={checkIcon} alt="" />
             <div className='flex flex-col gap-2'>
-              <span className='text-2xl font-bold text-gray-100'>+192.847</span>
+              <span className='text-2xl font-bold text-gray-100'>+{guessesCount}</span>
               <span className='text-gray-300'>Palpites enviados</span>
             </div>
           </div>
@@ -73,15 +76,18 @@ export default function Home({ count }: HomeProps) {
   )
 }
 
-// export const getServerSideProps = async () => {
-//   const response = await fetch('http://localhost:3333/pools/count')
-//   const data = await response.json()
+export const getServerSideProps = async () => {
+  const [poolsCountResponse, guessesCountResponse, usersCountResponse] = await Promise.all([
+    api.get('/pools/count'),
+    api.get('/guesses/count'),
+    api.get('/users/count')
+  ])
 
-//   console.log(data)
-
-//   return {
-//     props: {
-//       count: data.count
-//     },
-//   }
-// }
+  return {
+    props: {
+      poolsCount: poolsCountResponse.data.count,
+      guessesCount: guessesCountResponse.data.count,
+      usersCount: usersCountResponse.data.count,
+    },
+  }
+}
