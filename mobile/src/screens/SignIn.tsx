@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { Center, Text } from 'native-base';
 
 export function SignIn() {
@@ -7,7 +6,6 @@ export function SignIn() {
       <Text color="white">
         Sign In!
       </Text>
-      <StatusBar style="auto" />
     </Center>
   );
 }
