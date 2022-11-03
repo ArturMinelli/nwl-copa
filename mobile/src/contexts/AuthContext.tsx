@@ -1,4 +1,4 @@
-import { createContext, ReactNode } from "react"
+import { createContext, ReactNode, useState } from "react"
 
 interface UserProps {
   name: string;
@@ -14,10 +14,23 @@ interface AuthContextProviderProps {
   children: ReactNode;
 }
 
-const AuthContext = createContext({} as AuthContextType)
+export const AuthContext = createContext({} as AuthContextType)
 
 export function AuthContextProvider({children}: AuthContextProviderProps) {
+  const [user, setUser] = useState<UserProps>({name: 'Artur Minelli', avatarUrl: 'https://github.com/ArturMinelli.png'})
+
+  async function signIn() {
+    console.log('Entrou')
+  }
+
   return (
-    {children}
+    <AuthContext.Provider
+      value={{
+        user,
+        signIn,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   )
 }
