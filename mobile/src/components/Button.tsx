@@ -25,6 +25,7 @@ export function Button({ title, type = 'PRIMARY', ...rest }: Props) {
       <Text
         fontSize="sm"
         fontFamily="heading"
+        textTransform="uppercase"
         color={type === 'SECONDARY' ? 'white' : "black"}
       >
         {title}
