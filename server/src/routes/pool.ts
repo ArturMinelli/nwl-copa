@@ -101,5 +101,54 @@ export async function poolRoutes(fastify: FastifyInstance) {
       })
 
       return reply.status(200).send()
-    })
+  })
+
+  fastify.get(
+    '/pools',
+    {
+      onRequest: [authenticate],
+    },
+   async (request, reply) => {
+      const pools = await prisma.pool.findMany({
+        where: {
+          participants: {
+            some: {
+              userId: request.user.sub
+            }
+          }
+        },
+        include: {
+          _count: {
+            select: {
+              participants: true
+            }
+          },
+          participants: {
+            select: {
+              id: true,
+
+              user: {
+                select: {
+                  avatarUrl: true
+                }
+              }
+            },
+            take: 4,
+          },
+          owner: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+        }
+      })
+
+      if(pools.length === 0) {
+        return reply.status(404).send({ message: "You are not participating in any pools yet" })
+      }
+
+      return { pools }
+   }
+    )
 }
