@@ -5,7 +5,7 @@ import Logo from '../assets/nlw-copa-logo.svg'
 import { useAuth } from '../hooks/useAuth';
 
 export function SignIn() {
-  const { signIn } = useAuth()
+  const { signIn, isUserAuthenticating } = useAuth()
 
   return (
     <Center flex={1} bgColor="gray.900" p={7}>
@@ -18,6 +18,8 @@ export function SignIn() {
         isLoading={false}
         mt={12}
         onPress={signIn}
+        isDisabled={isUserAuthenticating}
+        _loading={{ _spinner: {color: 'white'} }}
       />
 
       <Text
