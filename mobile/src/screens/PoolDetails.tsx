@@ -9,6 +9,7 @@ import { PoolCardProps } from '../components/PoolCard';
 import { PoolHeader } from '../components/PoolHeader';
 import { EmptyMyPoolList } from '../components/EmptyMyPoolList';
 import { Option } from '../components/Option';
+import { Guesses } from '../components/Guesses';
 
 interface RouteParams {
   id: string;
@@ -71,7 +72,7 @@ export function PoolDetails() {
         onShare={handleShareCode}
       />
 
-      {poolDetails._count.participants < 0 ? (
+      {poolDetails._count.participants > 0 ? (
         <VStack px={5} flex={1}>
           <PoolHeader data={poolDetails}/>
 
@@ -87,6 +88,10 @@ export function PoolDetails() {
               onPress={() => setOptionSelected('ranking')}
             />
           </HStack>
+
+          <Guesses
+            poolId={poolDetails.id}
+          />
 
         </VStack>
       ) : (
