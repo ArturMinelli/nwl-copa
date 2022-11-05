@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { VStack, Icon, useToast, FlatList } from "native-base";
 import { Button } from "../components/Button";
 import { Header } from "../components/Header";
 import { PoolCard, PoolCardProps } from '../components/PoolCard';
 import { Octicons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { api } from "../lib/api";
 import { Loading } from '../components/Loading';
 import { EmptyPoolList } from '../components/EmptyPoolList';
@@ -19,7 +19,7 @@ export function Pools() {
   async function fetchPools() {
     try {
       setIsLoading(true)
-      const response = await api.get('pools')
+      const response = await api.get('/pools')
       setPools(response.data.pools)
     }
     catch (err) {
@@ -35,9 +35,9 @@ export function Pools() {
     }
   }
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     fetchPools()
-  }, [])
+  }, []))
 
   return (
     <VStack flex={1} bgColor="gray.900">
@@ -46,7 +46,7 @@ export function Pools() {
       <VStack mt={6} mx={5} borderBottomWidth={1} borderBottomColor="gray.600" pb={4} mb={4}>
         <Button
           onPress={() => navigate('findPool')}
-          title="Buscaro bolão por título"
+          title="Buscar bolão por código"
           leftIcon={<Icon as={Octicons} name="search" color="black" size="md"/>}
         />
       </VStack>
@@ -64,6 +64,7 @@ export function Pools() {
           }}
           renderItem={({ item }) => (
             <PoolCard
+              onPress={() => navigate('poolDetails', { id: item.id })}
               data={item}
             />
           )}
