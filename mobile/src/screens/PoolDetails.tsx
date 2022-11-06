@@ -91,6 +91,7 @@ export function PoolDetails() {
 
           <Guesses
             poolId={poolDetails.id}
+            poolCode={poolDetails.code}
           />
 
         </VStack>
