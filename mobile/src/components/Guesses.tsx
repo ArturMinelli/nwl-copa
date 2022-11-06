@@ -44,6 +44,48 @@ export function Guesses({ poolId }: Props) {
     }
   }
 
+  async function handleConfirmGuess(gameId: string) {
+
+    try {
+
+      if(!firstTeamPoints.trim() || !secondTeamPoints.trim()) {
+        return toast.show({
+          title: "Informe a pontuação para ambos os times!",
+          placement: 'top',
+          color: 'red.500'
+        })
+      }
+
+      await api.post(`/pools/${poolId}/games/${gameId}/guesses`, {
+        firstTeamPoints: Number(firstTeamPoints),
+        secondTeamPoints: Number(secondTeamPoints),
+      })
+
+      toast.show({
+        title: "O seu palpite foi registrado com sucesso!",
+        placement: 'top',
+        color: 'green.500'
+      })
+
+      getGames()
+
+    }
+    catch (err) {
+
+      console.log(err)
+      toast.show({
+        title: "Não foi possível registrar o seu palpite!",
+        placement: 'top',
+        color: 'red.500'
+      })
+      throw err
+
+    }
+    finally {
+
+    }
+  }
+
   useEffect(() => {
     getGames()
   }, [])
@@ -63,7 +105,7 @@ export function Guesses({ poolId }: Props) {
           data={item}
           setFirstTeamPoints={setFirstTeamPoints}
           setSecondTeamPoints={setSecondTeamPoints}
-          onGuessConfirm={() => null}
+          onGuessConfirm={() => handleConfirmGuess(item.id)}
         />
       )}
     />
